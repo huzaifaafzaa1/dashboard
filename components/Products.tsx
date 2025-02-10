@@ -68,7 +68,7 @@ const Products = () => {
   }, [searchTerm]);
 
   return (
-    <div className="productContainer flex flex-col items-center w-[73%] ">
+    <div className="productContainer flex flex-col items-center w-[72%] ">
       {/* search container */}
       <div className="searchcontainer w-1/2 mx-auto my-5 p-2">
         <label className="text-darkgrey font-cabin">Search Item</label>

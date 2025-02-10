@@ -48,7 +48,7 @@ const ProductDescription = () => {
 
   // If no product is found, return a fallback message
   if (!product) {
-    return <p>No product selected. Please go back and select a product.</p>;
+    return <p>Loading product details... If this takes too long, please go back and select the product again.</p>;
   }
 
   return (

@@ -15,7 +15,7 @@ const Navbar = () => {
   ];
 
   return (
-    <div className='nav-parent w-44 '>
+    <div className='nav-parent w-36 '>
     <nav className="navbar group sticky top-0 left-0 bg-white flex flex-col items-center justify-between w-16 h-[625px] rounded-xl mx-2 my-2 transition-all duration-300 ease-in-out hover:w-36">
       <ul className="flex flex-col gap-7 my-5 justify-center items-center">
         {menuItems.map((item, index) => (
