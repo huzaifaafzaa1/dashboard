@@ -9,7 +9,20 @@ export default {
   ],
   theme: {
   	extend: {
+		fontFamily: {
+			cabin: ['"Cabin"', 'sans-serif'], // Add Cabin font with fallback to sans-serif
+		  },
   		colors: {
+			darkgrey:"#60695C",
+			lightgrey:"#1A1F1680",
+			black:"#1A1F16",
+			white:"#FFFFFF",
+			red:"#E5252C",
+			yellow:"#E6D117",
+			lightblue:"#BFD1E5",
+			darkgreen:"#105E46",
+			green:"#12805D",
+			lightgreen:"#02D693",
   			background: 'hsl(var(--background))',
   			foreground: 'hsl(var(--foreground))',
   			card: {

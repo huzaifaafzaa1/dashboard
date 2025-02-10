@@ -1,7 +1,6 @@
-"use client"
-
 import * as React from "react"
-import { SquareTerminal } from "lucide-react"
+import { SquareTerminal, LayoutDashboard } from "lucide-react"
+import Link from "next/link"
 
 import { NavMain } from "@/components/nav-main"
 import { NavUser } from "@/components/nav-user"
@@ -31,9 +30,8 @@ const data = {
   navMain: [
     {
       title: "Products",
-      url: "/dashboard",
+      url: "#",
       icon: SquareTerminal,
-      isActive: true,
       items: [
         {
           title: "All Products",
@@ -56,6 +54,15 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         <TeamSwitcher teams={data.teams} />
       </SidebarHeader>
       <SidebarContent>
+        {/* Direct Dashboard Link */}
+        <div className="p-2">
+          <Link href="/dashboard" className="flex items-center space-x-2 text-sm font-medium">
+            <LayoutDashboard className="w-5 h-5" />
+            <span>Dashboard</span>
+          </Link>
+        </div>
+
+        {/* Main Navigation Items */}
         <NavMain items={data.navMain} />
       </SidebarContent>
       <SidebarFooter>

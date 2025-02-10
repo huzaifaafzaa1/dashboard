@@ -1,14 +1,14 @@
-"use client"
-import { useRouter } from "next/navigation";
+
+import Link from 'next/link';
 
 export default function Home() {
-  const router = useRouter()
   return (
-    <div className="flex justify-center items-center  bg-slate-300 h-screen">
-      <button className="bg-black text-white px-3 py-2 rounded-lg" onClick={()=>router.push("/dashboard")}
-      >
-        Go to Dashboard
-      </button>
-    </div>
+    <main className="flex flex-col items-center justify-center min-h-screen">
+      <h1 className="text-4xl font-bold mb-4">Welcome to the App!</h1>
+      <div className="space-x-4">
+        <Link href="/ecommerce" className="text-blue-500 underline">Go to E-commerce</Link>
+        <Link href="/dashboard" className="text-blue-500 underline">Go to Dashboard</Link>
+      </div>
+    </main>
   );
 }
