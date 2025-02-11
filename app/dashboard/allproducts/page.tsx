@@ -7,19 +7,19 @@ import Link from 'next/link';
 
 const AllProducts = () => {
   const { data: products, error, isLoading } = useProducts();
-  const [openMenuId, setOpenMenuId] = useState<number | null>(null);
+  const [openMenuId, setOpenMenuId] = useState<string | null>(null);
   const { mutate: removeProduct } = useRemoveProduct();  // Destructure mutate function
 
-  const toggleMenu = (id: number) => {
+  const toggleMenu = (id: string) => {
     setOpenMenuId(openMenuId === id ? null : id);
   };
 
-  const handleEdit = (id: number) => {
-    console.log(`Edit product with ID: ${id}`);
+  const handleEdit = (id: string) => {
+    // console.log(`Edit product with ID: ${id}`);
     // Add your edit functionality here
   };
 
-  const handleRemove = (id: number) => { // when i click on remove button the id of the product get passed to handleremove
+  const handleRemove = (id: string) => { // when i click on remove button the id of the product get passed to handleremove
     removeProduct(id);  // Call the mutation to remove the product
   };
 

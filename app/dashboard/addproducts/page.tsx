@@ -21,7 +21,7 @@ import { Input } from "@/components/ui/input";
 
 // Zod validation schema
 const formSchema = z.object({
-  name_5900062343: z.number(),
+  name_5900062343: z.string(),
   name_0092174288: z.string(),
   name_2203518553: z.number().min(0),
   name_9452380852: z.string(),
@@ -33,7 +33,7 @@ const formSchema = z.object({
 
 // Define the Product interface
 interface Product {
-  id: number;
+  id: string;
   title: string;
   price: number;
   description: string;
@@ -52,7 +52,7 @@ export default function MyForm() {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      name_5900062343: 0,
+      name_5900062343: "",
       name_0092174288: "",
       name_2203518553: 0,
       name_9452380852: "",
@@ -108,10 +108,8 @@ function onSubmit(values: z.infer<typeof formSchema>) {
               <FormControl>
                 <Input
                   placeholder="Id"
-                  type="number"
+                  type="text"
                   {...field}
-                  value={field.value || ""} // Ensure the value is treated as a string for display
-                  onChange={(e) => field.onChange(e.target.valueAsNumber)}
                 />
               </FormControl>
               <FormDescription>This is your product ID.</FormDescription>

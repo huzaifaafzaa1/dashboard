@@ -6,7 +6,7 @@ import API from '@/services/axiosInstance';
 export const useRemoveProduct = () => {
   const queryClient = useQueryClient();
 
-  const removeProduct = async (id: number) => {
+  const removeProduct = async (id: string) => {
     await API.delete(`/products/${id}`);  // Assuming RESTful API deletes using product ID
   };
 

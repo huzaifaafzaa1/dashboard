@@ -24,7 +24,7 @@ const formSchema = z.object({
 
 // Interface for the product
 interface Product {
-  id: number;
+  id: string;
   title: string;
   price: number;
   description: string;
@@ -72,7 +72,7 @@ export default function EditProduct() {
     onSuccess: () => {
       toast.success("Product successfully updated!");
       queryClient.invalidateQueries({ queryKey: ['products'] });
-      router.push("/"); // Redirect to the product list after editing
+      router.push("/dashboard/allproducts"); // Redirect to the product list after editing
     },
     onError: () => {
       toast.error("Failed to update product.");
@@ -82,7 +82,7 @@ export default function EditProduct() {
   // Submit handler
   const onSubmit = (values: z.infer<typeof formSchema>) => {
     const updatedProduct: Product = {
-      id: Number(id),
+      id: id as string,   // the url passed can be undefined or array of string so i am restrictting it to just string
       title: values.name_0092174288,
       price: values.name_2203518553,
       description: values.name_9452380852,

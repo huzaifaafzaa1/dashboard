@@ -4,7 +4,7 @@ import API from '@/services/axiosInstance';
 
 // Define a TypeScript interface for the product
 interface Product {
-  id: number;
+  id: string;
   title: string;
   price: number;
   description: string;
