@@ -1,5 +1,5 @@
 "use client";
-import React from 'react';
+import React, { useEffect } from 'react';
 import Link from 'next/link';
 import { IoIosArrowBack } from "react-icons/io";
 import { IoBagAddOutline } from "react-icons/io5";
@@ -13,7 +13,7 @@ import { useParams } from 'next/navigation';
 
 // Define types for Product and Redux state
 type Product = {
-  id: number;
+  id: string;
   title: string;
   category: string;
   description: string;
@@ -41,9 +41,13 @@ const ProductDescription = () => {
   const bagProducts = useSelector((state: ReduxState) => state.bag.bagProducts);
   const { productId } = useParams();
 
+  const state = useSelector(_=>_)
+
+  useEffect(()=>console.log({state}))
+
   // Find the product from the store based on productId
   const product = useSelector((state: ReduxState) => 
-    state.productsStore.products.find((item) => item.id === Number(productId))
+    state.productsStore.products.find((item) => item.id === productId)
   );
 
   // If no product is found, return a fallback message

@@ -23,7 +23,7 @@ const bagSlice = createSlice({
       }
     },
 
-    increaseCount: (state, action: PayloadAction<number>) => {
+    increaseCount: (state, action: PayloadAction<string>) => {
       const product = state.bagProducts.find(
         (item) => item.id === action.payload
       );
@@ -32,7 +32,7 @@ const bagSlice = createSlice({
       }
     },
 
-    decreaseCount: (state, action: PayloadAction<number>) => {
+    decreaseCount: (state, action: PayloadAction<string>) => {
       const product = state.bagProducts.find(
         (item) => item.id === action.payload
       );
@@ -46,7 +46,7 @@ const bagSlice = createSlice({
       }
     },
 
-    removeFromBag: (state, action: PayloadAction<number>) => {
+    removeFromBag: (state, action: PayloadAction<string>) => {
       state.bagProducts = state.bagProducts.filter(
         (item) => item.id !== action.payload
       );
