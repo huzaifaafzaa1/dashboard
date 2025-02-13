@@ -1,7 +1,6 @@
 "use client";
 import { useRouter, useSearchParams } from "next/navigation";
-import { useProduct } from "@/hooks/useProduct";
-import { useQueryClient, useQuery } from "@tanstack/react-query";
+import { useProduct } from "@/hooks/useProduct"; // Import the custom hook
 import { toast } from "sonner";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -17,19 +16,20 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import API from "@/lib/axiosInstance";
-import { useEffect } from "react"; // Import useEffect
+import { useEffect } from "react";
 
 // Zod validation schema
 const formSchema = z.object({
-  name_5900062343: z.string(),
-  name_0092174288: z.string(),
-  name_2203518553: z.number().min(0),
-  name_9452380852: z.string(),
-  name_9203713113: z.string(),
-  name_4608014819: z.string().url({ message: "Please enter a valid URL." }),
-  name_4147583332: z.number().min(0).max(5),
-  name_6159556892: z.number(),
+  id: z.string(),
+  title: z.string(),
+  price: z.number().min(0),
+  description: z.string(),
+  category: z.string(),
+  image: z.string().url({ message: "Please enter a valid URL." }),
+  rating: z.object({
+    rate: z.number().min(0).max(5),
+    count: z.number(),
+  }),
 });
 
 // Define the Product interface
@@ -50,40 +50,31 @@ export default function AddProductPage() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const id = searchParams.get("id");
-  const queryClient = useQueryClient();
 
   // Use the custom hook
-  const {
-    productsQuery,
-    addProductMutation,
-    updateProductMutation,
-  } = useProduct();
+  const { useProductQuery, addProductMutation, updateProductMutation } =
+    useProduct();
 
-  // Determine the mode based on the presence of id
+  // Determine the mode based on the presence of id is there is id in the url then mode is edit if there is no id the mode will be add
   const mode = id ? "edit" : "add";
 
-  // Fetch product data if in "edit" mode
-  const { data: product, isLoading } = useQuery<Product>({
-    queryKey: ["product", id],
-    queryFn: async () => {
-      const { data } = await API.get(`/products/${id}`);
-      return data;
-    },
-    enabled: mode === "edit", // Only fetch data if in "edit" mode
-  });
+  // Fetch product data if in "edit" mode using the custom hook
+  const { data: product, isLoading } = useProductQuery(id);
 
   // Initialize the form
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      name_5900062343: "",
-      name_0092174288: "",
-      name_2203518553: 0,
-      name_9452380852: "",
-      name_9203713113: "",
-      name_4608014819: "",
-      name_4147583332: 0,
-      name_6159556892: 0,
+      id: "",
+      title: "",
+      price: 0,
+      description: "",
+      category: "",
+      image: "",
+      rating: {
+        rate: 0,
+        count: 0,
+      },
     },
   });
 
@@ -91,14 +82,16 @@ export default function AddProductPage() {
   useEffect(() => {
     if (product && mode === "edit") {
       form.reset({
-        name_5900062343: product.id,
-        name_0092174288: product.title,
-        name_2203518553: product.price,
-        name_9452380852: product.description,
-        name_9203713113: product.category,
-        name_4608014819: product.image,
-        name_4147583332: product.rating.rate,
-        name_6159556892: product.rating.count,
+        id: product.id,
+        title: product.title,
+        price: product.price,
+        description: product.description,
+        category: product.category,
+        image: product.image,
+        rating: {
+          rate: product.rating.rate,
+          count: product.rating.count,
+        },
       });
     }
   }, [product, mode, form]);
@@ -106,46 +99,25 @@ export default function AddProductPage() {
   // Submit handler for both add and edit
   const onSubmit = (values: z.infer<typeof formSchema>) => {
     const productData: Product = {
-      id: values.name_5900062343,
-      title: values.name_0092174288,
-      price: values.name_2203518553,
-      description: values.name_9452380852,
-      category: values.name_9203713113,
-      image: values.name_4608014819,
+      id: values.id,
+      title: values.title,
+      price: values.price,
+      description: values.description,
+      category: values.category,
+      image: values.image,
       rating: {
-        rate: values.name_4147583332,
-        count: values.name_6159556892,
+        rate: values.rating.rate,
+        count: values.rating.count,
       },
     };
 
     if (mode === "add") {
-      // Use the addProductMutation from the custom hook
-      addProductMutation.mutate(productData, {
-        onSuccess: () => {
-          toast.success("Product successfully added!");
-          form.reset();
-          queryClient.invalidateQueries({ queryKey: ["products"] });
-        },
-        onError: (error) => {
-          console.error("Error adding product:", error);
-          toast.error("Failed to add product. Please try again.");
-        },
-      });
+      addProductMutation.mutate(productData);
     } else if (mode === "edit") {
-      // Use the updateProductMutation from the custom hook
-      updateProductMutation.mutate(
-        { id: productData.id, product: productData },
-        {
-          onSuccess: () => {
-            toast.success("Product successfully updated!");
-            queryClient.invalidateQueries({ queryKey: ["products"] });
-            router.push("/dashboard/allproducts"); // Redirect to the product list after editing
-          },
-          onError: () => {
-            toast.error("Failed to update product.");
-          },
-        }
-      );
+      updateProductMutation.mutate({
+        id: productData.id,
+        product: productData,
+      });
     }
   };
 
@@ -160,12 +132,17 @@ export default function AddProductPage() {
         {/* Product ID Field */}
         <FormField
           control={form.control}
-          name="name_5900062343"
+          name="id"
           render={({ field }) => (
             <FormItem>
               <FormLabel>Id</FormLabel>
               <FormControl>
-                <Input placeholder="Id" type="text" {...field} disabled={mode === "edit"} />
+                <Input
+                  placeholder="Id"
+                  type="text"
+                  {...field}
+                  disabled={mode === "edit"}
+                />
               </FormControl>
               <FormDescription>This is your product ID.</FormDescription>
               <FormMessage />
@@ -173,10 +150,9 @@ export default function AddProductPage() {
           )}
         />
 
-        {/* Product Title Field */}
         <FormField
           control={form.control}
-          name="name_0092174288"
+          name="title"
           render={({ field }) => (
             <FormItem>
               <FormLabel>Title</FormLabel>
@@ -189,10 +165,9 @@ export default function AddProductPage() {
           )}
         />
 
-        {/* Product Price Field */}
         <FormField
           control={form.control}
-          name="name_2203518553"
+          name="price"
           render={({ field }) => (
             <FormItem>
               <FormLabel>Price</FormLabel>
@@ -211,17 +186,18 @@ export default function AddProductPage() {
           )}
         />
 
-        {/* Additional Fields */}
         <FormField
           control={form.control}
-          name="name_9452380852"
+          name="description"
           render={({ field }) => (
             <FormItem>
               <FormLabel>Description</FormLabel>
               <FormControl>
                 <Input placeholder="Description" type="text" {...field} />
               </FormControl>
-              <FormDescription>This is your product Description.</FormDescription>
+              <FormDescription>
+                This is your product Description.
+              </FormDescription>
               <FormMessage />
             </FormItem>
           )}
@@ -229,7 +205,7 @@ export default function AddProductPage() {
 
         <FormField
           control={form.control}
-          name="name_9203713113"
+          name="category"
           render={({ field }) => (
             <FormItem>
               <FormLabel>Category</FormLabel>
@@ -244,7 +220,7 @@ export default function AddProductPage() {
 
         <FormField
           control={form.control}
-          name="name_4608014819"
+          name="image"
           render={({ field }) => (
             <FormItem>
               <FormLabel>Image URL</FormLabel>
@@ -263,7 +239,7 @@ export default function AddProductPage() {
 
         <FormField
           control={form.control}
-          name="name_4147583332"
+          name="rating.rate"
           render={({ field }) => (
             <FormItem>
               <FormLabel>Rating</FormLabel>
@@ -284,7 +260,7 @@ export default function AddProductPage() {
 
         <FormField
           control={form.control}
-          name="name_6159556892"
+          name="rating.count"
           render={({ field }) => (
             <FormItem>
               <FormLabel>Rating Count</FormLabel>
@@ -304,7 +280,9 @@ export default function AddProductPage() {
         />
 
         {/* Submit Button */}
-        <Button type="submit">{mode === "add" ? "Add Product" : "Update Product"}</Button>
+        <Button type="submit">
+          {mode === "add" ? "Add Product" : "Update Product"}
+        </Button>
       </form>
     </Form>
   );

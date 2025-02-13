@@ -7,26 +7,29 @@ import Link from 'next/link';
 const AllProducts = () => {
   const [openMenuId, setOpenMenuId] = useState<string | null>(null);
 
-  const { productsQuery, removeProductMutation } = useProduct();
+  const { productsQuery, removeProductMutation } = useProduct();       // extracting 2custom hook functions from customhook
   const { data: products, error, isLoading } = productsQuery;
-  const { mutate: removeProduct } = removeProductMutation;
+  const { mutate: removeProduct } = removeProductMutation;            // here we are using remove product mutation
 
   const toggleMenu = (id: string) => {
     setOpenMenuId(openMenuId === id ? null : id);
   };
 
-  const handleRemove = (id: string) => {
+  const handleRemove = (id: string) => {   // this function would call by clicking on remove
     removeProduct(id);
   };
 
   if (isLoading) return <div>Loading...</div>;
   if (error) return <div>Error: {error.message}</div>;
 
+  // Check if products is defined before mapping
+  if (!products) return <div>No products found.</div>;
+
   return (
     <div className="p-6">
       <h1 className="text-3xl font-bold mb-6 text-center">All Products</h1>
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-        {products.map((product: any) => (
+        {products.map((product) => (
           <div key={product.id} className="relative bg-white rounded-2xl shadow-lg overflow-hidden hover:shadow-2xl transition-shadow duration-300">
             <button
               onClick={() => toggleMenu(product.id)}
@@ -51,7 +54,7 @@ const AllProducts = () => {
 
             <div className="p-4">
               <div className="bg-gray-100 p-4 rounded-xl flex items-center justify-center">
-                <img src={product.image} alt={product.name} className="h-40 object-contain" />
+                <img src={product.image} alt={product.title} className="h-40 object-contain" />
               </div>
               <h3 className="text-xl font-semibold mt-4 text-gray-800">{product.title}</h3>
               <p className="text-sm text-gray-500 mt-1">Category: {product.category}</p>

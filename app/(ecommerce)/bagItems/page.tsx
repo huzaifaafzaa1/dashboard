@@ -9,7 +9,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { increaseCount,decreaseCount } from '../../redux/bagSlice';
 import { RootState } from '../../redux/store'; // Import RootState
 
-const bagItems = () => {
+const BagItems = () => {
  
   const dispatch = useDispatch();
   const bagProducts = useSelector((state:RootState)=>state.bag.bagProducts)     // state is set i dont need to dispatch it here
@@ -66,4 +66,4 @@ const bagItems = () => {
   )
 }
 
-export default bagItems
+export default BagItems

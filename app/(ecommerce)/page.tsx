@@ -1,8 +1,8 @@
 "use client";
 import Products from "@/components/Products";
 
-const Page = () => {
+const Home = () => {
   return <Products />;
 };
 
-export default Page;
+export default Home;
