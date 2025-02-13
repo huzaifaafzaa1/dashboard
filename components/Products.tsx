@@ -11,7 +11,7 @@ import { selectBagProducts, selectProducts} from "../app/redux/selector";
 import ProductCard from "./ProductCard";
 import { MdOutlineCancelPresentation } from "react-icons/md";
 import { Product, BagProduct } from "../app/redux/type"; // Import BagProduct type from type.ts
-import API from "@/services/axiosInstance";
+import API from "@/lib/axiosInstance";
 
 const Products = () => {
   const [searchTerm, setSearchTerm] = useState("");
@@ -68,7 +68,8 @@ const Products = () => {
   }, [searchTerm]);
 
   return (
-    <div className="productContainer flex flex-col items-center w-[72%] ">
+    <div className="productContainer flex flex-col items-center w-[66%]">
+      
       {/* search container */}
       <div className="searchcontainer w-1/2 mx-auto my-5 p-2">
         <label className="text-darkgrey font-cabin">Search Item</label>
@@ -91,21 +92,29 @@ const Products = () => {
         </div>
       </div>
 
-      {/* products */}
-      <div className="flex justify-center items-center w-[95%] my-4">
-        <div className="products grid grid-cols-4 gap-4 justify-center items-center w-full">
-          {filteredProducts.map((product) => (
-            <Link key={product.id} href={`ecommerce/${product.id}`}>
-              <ProductCard
-                product={product}
-                bagProducts={bagProducts}
-                dispatch={dispatch}
-                addToBag={addToBag}
-              />
-            </Link>
-          ))}
-        </div>
+      
+{/* products */}
+    <div className="flex justify-center items-center w-[95%] my-4">
+      <div className="products grid grid-cols-4 gap-4 justify-center items-center w-full min-h-[300px]">
+        {filteredProducts.length > 0 ? (
+        filteredProducts.map((product) => (
+        <Link key={product.id} href={`${product.id}`}>
+          <ProductCard
+            product={product}
+            bagProducts={bagProducts}
+            dispatch={dispatch}
+            addToBag={addToBag}
+          />
+        </Link>
+        ))
+      ) : (
+       <div className="col-span-4 text-center text-gray-500 text-xl">
+        No products found.
+       </div>
+       )}
       </div>
+    </div>
+
     </div>
   );
 };

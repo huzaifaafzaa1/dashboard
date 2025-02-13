@@ -2,6 +2,7 @@ import React from 'react';
 import { IoMenu, IoHome } from "react-icons/io5";
 import { RiShoppingBag4Fill } from "react-icons/ri";
 import { FiLogOut } from "react-icons/fi";
+import { LuLayoutDashboard } from "react-icons/lu";
 import Link from 'next/link';
 
 const Navbar = () => {
@@ -10,8 +11,9 @@ const Navbar = () => {
   const menuItems = [
     { icon: <img src="logo.png" alt="Logo" className="h-6 max-w-6" />, text: 'Logo', href: null },
     { icon: <IoMenu className=" h-6 w-6" />, text: 'Menu', href: null },
-    { icon: <IoHome className="h-6 w-6" />, text: 'Home', href: '/ecommerce' },
-    { icon: <RiShoppingBag4Fill className="h-6 w-6" />, text: 'Bag', href: '/ecommerce/bagItems' },
+    { icon: <IoHome className="h-6 w-6" />, text: 'Home', href: '/' },
+    { icon: <RiShoppingBag4Fill className="h-6 w-6" />, text: 'Bag', href: '/bagItems' },
+    { icon: <LuLayoutDashboard className="h-6 w-6"/>, text: 'Dashboard', href: '/dashboard' },
   ];
 
   return (

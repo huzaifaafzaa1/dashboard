@@ -1,8 +1,7 @@
-//https://uniworthdress.com/uploads/product/FS20254RH.jpg
-
 "use client";
-import { useAddProduct } from "@/hooks/useAddProduct";
-import { useQueryClient } from "@tanstack/react-query"; 
+import { useRouter, useSearchParams } from "next/navigation";
+import { useProduct } from "@/hooks/useProduct";
+import { useQueryClient, useQuery } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -18,6 +17,8 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import API from "@/lib/axiosInstance";
+import { useEffect } from "react"; // Import useEffect
 
 // Zod validation schema
 const formSchema = z.object({
@@ -45,10 +46,33 @@ interface Product {
   };
 }
 
-export default function MyForm() {
-  const { mutate } = useAddProduct();  // Use mutation hook
-  const queryClient = useQueryClient();  // Initialize queryClient
+export default function AddProductPage() {
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const id = searchParams.get("id");
+  const queryClient = useQueryClient();
 
+  // Use the custom hook
+  const {
+    productsQuery,
+    addProductMutation,
+    updateProductMutation,
+  } = useProduct();
+
+  // Determine the mode based on the presence of id
+  const mode = id ? "edit" : "add";
+
+  // Fetch product data if in "edit" mode
+  const { data: product, isLoading } = useQuery<Product>({
+    queryKey: ["product", id],
+    queryFn: async () => {
+      const { data } = await API.get(`/products/${id}`);
+      return data;
+    },
+    enabled: mode === "edit", // Only fetch data if in "edit" mode
+  });
+
+  // Initialize the form
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -63,41 +87,76 @@ export default function MyForm() {
     },
   });
 
+  // Reset the form with product data when it's fetched
+  useEffect(() => {
+    if (product && mode === "edit") {
+      form.reset({
+        name_5900062343: product.id,
+        name_0092174288: product.title,
+        name_2203518553: product.price,
+        name_9452380852: product.description,
+        name_9203713113: product.category,
+        name_4608014819: product.image,
+        name_4147583332: product.rating.rate,
+        name_6159556892: product.rating.count,
+      });
+    }
+  }, [product, mode, form]);
 
-  // this function will run we click on the button
-// onSubmit function using Product interface
-function onSubmit(values: z.infer<typeof formSchema>) {
-  const product: Product = {
-    id: values.name_5900062343,
-    title: values.name_0092174288,
-    price: values.name_2203518553,
-    description: values.name_9452380852,
-    category: values.name_9203713113,
-    image: values.name_4608014819,
-    rating: {
-      rate: values.name_4147583332,
-      count: values.name_6159556892,
-    },
+  // Submit handler for both add and edit
+  const onSubmit = (values: z.infer<typeof formSchema>) => {
+    const productData: Product = {
+      id: values.name_5900062343,
+      title: values.name_0092174288,
+      price: values.name_2203518553,
+      description: values.name_9452380852,
+      category: values.name_9203713113,
+      image: values.name_4608014819,
+      rating: {
+        rate: values.name_4147583332,
+        count: values.name_6159556892,
+      },
+    };
+
+    if (mode === "add") {
+      // Use the addProductMutation from the custom hook
+      addProductMutation.mutate(productData, {
+        onSuccess: () => {
+          toast.success("Product successfully added!");
+          form.reset();
+          queryClient.invalidateQueries({ queryKey: ["products"] });
+        },
+        onError: (error) => {
+          console.error("Error adding product:", error);
+          toast.error("Failed to add product. Please try again.");
+        },
+      });
+    } else if (mode === "edit") {
+      // Use the updateProductMutation from the custom hook
+      updateProductMutation.mutate(
+        { id: productData.id, product: productData },
+        {
+          onSuccess: () => {
+            toast.success("Product successfully updated!");
+            queryClient.invalidateQueries({ queryKey: ["products"] });
+            router.push("/dashboard/allproducts"); // Redirect to the product list after editing
+          },
+          onError: () => {
+            toast.error("Failed to update product.");
+          },
+        }
+      );
+    }
   };
 
-  mutate(product, {
-    onSuccess: () => {
-      toast.success("Product successfully added!");
-      form.reset();
-      queryClient.invalidateQueries({ queryKey: ['products'] });
-    },
-    onError: (error) => {
-      console.error("Error adding product:", error);
-      toast.error("Failed to add product. Please try again.");
-    },
-  });
-}
-  
+  if (mode === "edit" && isLoading) return <p>Loading...</p>;
 
   return (
-    <Form {...form} >
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8 max-w-3xl mx-auto py-10">
-
+    <Form {...form}>
+      <form
+        onSubmit={form.handleSubmit(onSubmit)}
+        className="space-y-8 max-w-3xl mx-auto py-10"
+      >
         {/* Product ID Field */}
         <FormField
           control={form.control}
@@ -106,11 +165,7 @@ function onSubmit(values: z.infer<typeof formSchema>) {
             <FormItem>
               <FormLabel>Id</FormLabel>
               <FormControl>
-                <Input
-                  placeholder="Id"
-                  type="text"
-                  {...field}
-                />
+                <Input placeholder="Id" type="text" {...field} disabled={mode === "edit"} />
               </FormControl>
               <FormDescription>This is your product ID.</FormDescription>
               <FormMessage />
@@ -146,7 +201,7 @@ function onSubmit(values: z.infer<typeof formSchema>) {
                   placeholder="Price"
                   type="number"
                   {...field}
-                  value={field.value || ""} // Ensure the value is treated as a string for display
+                  value={field.value || ""}
                   onChange={(e) => field.onChange(e.target.valueAsNumber)}
                 />
               </FormControl>
@@ -217,7 +272,7 @@ function onSubmit(values: z.infer<typeof formSchema>) {
                   placeholder="Rating"
                   type="number"
                   {...field}
-                  value={field.value || ""} // Ensure the value is treated as a string for display
+                  value={field.value || ""}
                   onChange={(e) => field.onChange(e.target.valueAsNumber)}
                 />
               </FormControl>
@@ -238,7 +293,7 @@ function onSubmit(values: z.infer<typeof formSchema>) {
                   placeholder="Rating Count"
                   type="number"
                   {...field}
-                  value={field.value || ""} // Ensure the value is treated as a string for display
+                  value={field.value || ""}
                   onChange={(e) => field.onChange(e.target.valueAsNumber)}
                 />
               </FormControl>
@@ -249,7 +304,7 @@ function onSubmit(values: z.infer<typeof formSchema>) {
         />
 
         {/* Submit Button */}
-        <Button type="submit">Add Product</Button>
+        <Button type="submit">{mode === "add" ? "Add Product" : "Update Product"}</Button>
       </form>
     </Form>
   );

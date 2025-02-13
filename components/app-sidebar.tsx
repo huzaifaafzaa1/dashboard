@@ -1,8 +1,22 @@
+"use client"
+
 import * as React from "react"
-import { SquareTerminal, LayoutDashboard } from "lucide-react"
-import Link from "next/link"
+import {
+  AudioWaveform,
+  BookOpen,
+  Bot,
+  Command,
+  Frame,
+  GalleryVerticalEnd,
+  Map,
+  PieChart,
+  Settings2,
+  SquareTerminal,
+  Home,
+} from "lucide-react"
 
 import { NavMain } from "@/components/nav-main"
+import { NavProjects } from "@/components/nav-projects"
 import { NavUser } from "@/components/nav-user"
 import { TeamSwitcher } from "@/components/team-switcher"
 import {
@@ -13,7 +27,7 @@ import {
   SidebarRail,
 } from "@/components/ui/sidebar"
 
-// Customized data.
+// This is sample data.
 const data = {
   user: {
     name: "shadcn",
@@ -23,29 +37,52 @@ const data = {
   teams: [
     {
       name: "Acme Inc",
-      logo: SquareTerminal,
+      logo: GalleryVerticalEnd,
       plan: "Enterprise",
+    },
+    {
+      name: "Acme Corp.",
+      logo: AudioWaveform,
+      plan: "Startup",
+    },
+    {
+      name: "Evil Corp.",
+      logo: Command,
+      plan: "Free",
     },
   ],
   navMain: [
     {
-      title: "Products",
+      title: "Products", // ✅ Changed from 'name' to 'title'
       url: "#",
-      icon: SquareTerminal,
+      icon: Bot,
       items: [
         {
-          title: "All Products",
-          url: "/dashboard/allproducts",
+          title: "Add Product", // ✅ Changed from 'name' to 'title'
+          url: "/dashboard/addproducts",
         },
         {
-          title: "Add Products",
-          url: "/dashboard/addproducts",
+          title: "All Products", // ✅ Changed from 'name' to 'title'
+          url: "/dashboard/allproducts",
         },
       ],
     },
   ],
-  projects: [],
-}
+  projects: [
+    {
+      name: "Dashboard",
+      url: "/dashboard",
+      icon: SquareTerminal,
+    },
+    {
+      name: "Website",
+      url: "/",
+      icon: Home,
+    },
+  ],
+  
+};
+
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   return (
@@ -54,16 +91,8 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         <TeamSwitcher teams={data.teams} />
       </SidebarHeader>
       <SidebarContent>
-        {/* Direct Dashboard Link */}
-        <div className="p-2">
-          <Link href="/dashboard" className="flex items-center space-x-2 text-sm font-medium">
-            <LayoutDashboard className="w-5 h-5" />
-            <span>Dashboard</span>
-          </Link>
-        </div>
-
-        {/* Main Navigation Items */}
         <NavMain items={data.navMain} />
+        <NavProjects projects={data.projects} />
       </SidebarContent>
       <SidebarFooter>
         <NavUser user={data.user} />

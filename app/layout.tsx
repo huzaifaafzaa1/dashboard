@@ -1,10 +1,9 @@
-// app/layout.tsx
-import { ReactNode } from 'react';
+import { ReactNode } from "react";
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import QueryProvider from "@/provider/QueryProvider";
-import { Toaster } from 'sonner';
+import { Toaster } from "sonner";
 import { ClientProvider } from "./redux/provider";
 import { ToastContainer } from "react-toastify";
 
@@ -41,7 +40,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
               pauseOnHover
             />
             <Toaster position="bottom-right" />
-            {children}
+            {children} {/* This ensures only relevant content is displayed */}
           </QueryProvider>
         </ClientProvider>
       </body>
