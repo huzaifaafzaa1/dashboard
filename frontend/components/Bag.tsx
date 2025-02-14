@@ -57,11 +57,11 @@ const Bag: React.FC = () => {
       <div className="w-72">
         <div className="flex justify-center items-center h-20">
           <h1 className="text-center text-4xl">
-            {pathname === "/ecommerce/bagItems" ? "Checkout" : "Bag"}
+            {pathname === "/bagItems" ? "Checkout" : "Bag"}
           </h1>
         </div>
 
-        {pathname !== "/ecommerce/bagItems" && (
+        {pathname !== "/bagItems" && (
           <div className="grid grid-cols-3 gap-2 my-2">
             {bagProducts.length > 0 ? (
               bagProducts.map((product, index) => (
@@ -76,7 +76,7 @@ const Bag: React.FC = () => {
         )}
 
         <div className="flex justify-center items-center font-cabin">
-          {pathname === "/ecommerce/bagItems" ? (
+          {pathname === "/bagItems" ? (
             <div className="bg-white shadow-md rounded-lg p-6 mr-2">
               <h2 className="text-xl mb-4">Order Summary</h2>
               <ul className="space-y-2">
@@ -126,7 +126,7 @@ const Bag: React.FC = () => {
             </div>
           ) : (
             <Link
-              href="/ecommerce/bagItems"   // button link to move from one page to another
+              href="/bagItems"   // button link to move from one page to another
               className="bg-gray-900 px-4 text-white rounded-xl flex justify-center items-center gap-3"
             >
               <IoBagHandleOutline className="h-8" />

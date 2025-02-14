@@ -18,7 +18,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, bagProducts, dispatc
     event.stopPropagation();
 
     // Check if the product is already in the bag
-    const existingProduct = bagProducts.find((item) => item.id === product.id);
+    const existingProduct = bagProducts.find((item) => item._id === product._id);
     if (existingProduct) {
       toast.error("This product is already in your bag!");
     } else {

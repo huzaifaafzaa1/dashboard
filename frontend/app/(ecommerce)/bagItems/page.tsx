@@ -48,9 +48,9 @@ const BagItems = () => {
               <div className='flex justify-between font-cabin'>
               <p className='font-cabin text-lg'>${bagproduct.price} × {bagproduct.count}</p>
               <div className='flex gap-3 justify-center items-center mx-5'>
-                <button onClick={() => dispatch(decreaseCount(bagproduct.id))}><FaMinus className='text-red' /></button>
+                <button onClick={() => dispatch(decreaseCount(bagproduct._id))}><FaMinus className='text-red' /></button>
                 <div>{bagproduct.count}</div>    {/* we have added count when we were fetching data so it is added to each product and now we can access it   */}
-                <button  onClick={() => dispatch(increaseCount(bagproduct.id))}><FaPlus className='text-lightgreen'/></button>
+                <button  onClick={() => dispatch(increaseCount(bagproduct._id))}><FaPlus className='text-lightgreen'/></button>
               </div>
               </div>
             </div>

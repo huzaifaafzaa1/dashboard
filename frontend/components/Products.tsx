@@ -15,8 +15,8 @@ import API from "@/lib/axiosInstance";
 
 const Products = () => {
   const [searchTerm, setSearchTerm] = useState("");
-  const bagProducts = useSelector(selectBagProducts);
-  const products = useSelector(selectProducts);
+  const bagProducts = useSelector(selectBagProducts);    // using selector function
+  const products = useSelector(selectProducts);          // using selector function
   const dispatch = useDispatch();
 
   const API_URL = "/products"; // Only the endpoint since baseURL is already set in axios.tsx
@@ -56,7 +56,7 @@ const Products = () => {
     if (savedSearchTerm) {
       setSearchTerm(savedSearchTerm);
     }
-
+    // console.log("fetching data")
     fetchData();     
 
   }, [dispatch]);
@@ -98,7 +98,7 @@ const Products = () => {
       <div className="products grid grid-cols-4 gap-4 justify-center items-center w-full min-h-[300px]">
         {filteredProducts.length > 0 ? (
         filteredProducts.map((product) => (
-        <Link key={product.id} href={`${product.id}`}>
+        <Link key={product._id} href={`${product._id}`}>
           <ProductCard
             product={product}
             bagProducts={bagProducts}

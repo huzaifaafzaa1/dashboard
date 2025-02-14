@@ -23,7 +23,7 @@ const BagProduct : React.FC<BagProductProps> = ({ product }) => {
         className="absolute top-0 left-0 w-full h-full bg-black bg-opacity-50 text-white
           flex justify-center items-center opacity-0 hover:opacity-100 transition-opacity duration-300 
           group-hover:opacity-100 font-cabin rounded-xl"
-        onClick={() => dispatch(removeFromBag(product.id))}
+        onClick={() => dispatch(removeFromBag(product._id))}
       >
         Remove
       </button>

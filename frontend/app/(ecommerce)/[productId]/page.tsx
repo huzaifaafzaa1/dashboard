@@ -10,10 +10,11 @@ import { useSelector, useDispatch } from 'react-redux';
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useParams } from 'next/navigation';
+// import { selectProducts } from '@/app/redux/selector';
 
 // Define types for Product and Redux state
 type Product = {
-  id: string;
+  _id: string;
   title: string;
   category: string;
   description: string;
@@ -40,6 +41,7 @@ const ProductDescription = () => {
   // Access Redux state with types
   const bagProducts = useSelector((state: ReduxState) => state.bag.bagProducts);
   const { productId } = useParams();
+  console.log("i am product ID",productId)
 
   const state = useSelector(_=>_)
 
@@ -47,7 +49,7 @@ const ProductDescription = () => {
 
   // Find the product from the store based on productId
   const product = useSelector((state: ReduxState) => 
-    state.productsStore.products.find((item) => item.id === productId)
+    state.productsStore.products.find((item) => item._id === productId)
   );
 
   // If no product is found, return a fallback message
@@ -69,7 +71,7 @@ const ProductDescription = () => {
         pauseOnHover
       />
 
-      <div><Link href="/ecommerce" className='flex gap-2 items-center my-5 py-2 px-3'>
+      <div><Link href="/" className='flex gap-2 items-center my-5 py-2 px-3'>
         <IoIosArrowBack />Back</Link>
       </div>
 
@@ -117,7 +119,7 @@ const ProductDescription = () => {
             className='bg-gray-900 text-white px-4 py-1 rounded-2xl flex justify-center items-center gap-3'
             onClick={() => {
               // Check if the product is already in the bag
-              const existingProduct = bagProducts.find((item) => item.id === product.id);
+              const existingProduct = bagProducts.find((item) => item._id === product._id);
               if (existingProduct) {
                 toast.error("This product is already in your bag!");
               } else {
