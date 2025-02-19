@@ -3,18 +3,23 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { fetchProducts, addProduct, removeProduct, updateProduct, fetchProductById } from '@/services/productService';
 import { toast } from 'sonner'; // Import toast
 
-// Define a TypeScript interface for the product
+// Update the Product interface in your custom hook and service function
 interface Product {
-  id: string;
+  _id?: string; // Make _id optional
   title: string;
   price: number;
   description: string;
-  category: string;
+  category: {
+    _id: string;
+    name: string;
+  }; // Change to an object with _id and name
   image: string;
-  rating: {
-    rate: number;
-    count: number;
-  };
+  rating: Rating;
+}
+
+export interface Rating {
+  rate: number;
+  count: number;
 }
 
 // Main custom hook combining all functionalities
@@ -28,14 +33,14 @@ export const useProduct = () => {
   });
 
   // Fetch a single product by ID using useQuery
-  const useProductQuery = (id: string | null) => {
+  const useProductQuery = (_id: string | null) => {
     return useQuery<Product>({
-      queryKey: ['product', id],
+      queryKey: ['product', _id],
       queryFn: async () => {
-        if (!id) throw new Error('Product ID is required');
-        return fetchProductById(id);
+        if (!_id) throw new Error('Product ID is required');
+        return fetchProductById(_id);
       },
-      enabled: !!id,
+      enabled: !!_id,
     });
   };
 
@@ -84,67 +89,3 @@ export const useProduct = () => {
     removeProductMutation,
   };
 };
-
-/////////////////////////////////////////////////
-//code without services functions
-// "use client";
-// import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-// import API from '@/lib/axiosInstance';
-
-// // Define a TypeScript interface for the product
-// interface Product {
-//   id: string;
-//   title: string;
-//   price: number;
-//   description: string;
-//   category: string;
-//   image: string;  
-//   rating: {
-//     rate: number;  
-//     count: number;
-//   };
-// }
-
-// // Fetch Products
-// const fetchProducts = async () => {
-//   const { data } = await API.get(`/products`);
-//   return data;
-// };
-
-// // Main custom hook combining all functionalities
-// export const useProduct = () => {
-//   const queryClient = useQueryClient();
-
-//   // Fetch products using useQuery
-//   const productsQuery = useQuery({
-//     queryKey: ['products'],
-//     queryFn: fetchProducts,        //calling the fetch function here
-//   });
-
-//   // Add product using useMutation
-//   const addProductMutation = useMutation({
-//     mutationFn: async (product: Product) => {
-//       const { data } = await API.post(`/products`, product);
-//       return data;
-//     },
-//     onSuccess: () => {
-//       queryClient.invalidateQueries({ queryKey: ['products'] });
-//     },
-//   });
-
-//   // Remove product using useMutation
-//   const removeProductMutation = useMutation({
-//     mutationFn: async (id: string) => {
-//       await API.delete(`/products/${id}`);
-//     },
-//     onSuccess: () => {
-//       queryClient.invalidateQueries({ queryKey: ['products'] });
-//     },
-//   });
-
-//   return {
-//     productsQuery,          // For fetching products
-//     addProductMutation,     // For adding products
-//     removeProductMutation,  // For removing products
-//   };
-// };

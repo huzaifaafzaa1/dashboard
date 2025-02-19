@@ -13,10 +13,15 @@ import { useParams } from 'next/navigation';
 // import { selectProducts } from '@/app/redux/selector';
 
 // Define types for Product and Redux state
+type Category = {
+  _id: string;
+  name: string;
+};
+
 type Product = {
   _id: string;
   title: string;
-  category: string;
+  category: Category; // Change this from string to Category
   description: string;
   image: string;
   price: number;
@@ -97,7 +102,7 @@ const ProductDescription = () => {
 
           <div className=''>
             <h1 className='font-bold text-4xl px-4'>{product.title}</h1>
-            <h2 className=' text-2xl px-4 py-1 text-darkgrey'>{product.category}</h2>
+            <h2 className=' text-2xl px-4 py-1 text-darkgrey'>{product.category.name}</h2>
             <div className='px-4 py-2 flex gap-3'>
               <ul className='flex items-center gap-1 text-darkgreen text-lg'>
                 <li><MdStar /></li>

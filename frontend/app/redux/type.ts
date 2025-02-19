@@ -1,19 +1,23 @@
 export interface Rating {
-    rate: number;
-    count: number;
-  }
-  
-  export interface Product {
-    _id: string;
-    title: string;
-    price: number;
-    description: string;
-    category: string;
-    image: string;
-    rating: Rating;
-  }
-  
-  export interface BagProduct extends Product {
-    count: number; // Add count to BagProduct
-  }
-  
+  rate: number;
+  count: number;
+}
+
+export interface Category {
+  _id: string;
+  name: string;
+}
+
+export interface Product {
+  _id: string;
+  title: string;
+  price: number;
+  description: string;
+  category: Category; // Update to use the Category interface
+  image: string;
+  rating: Rating;
+}
+
+export interface BagProduct extends Product {
+  count: number; // Add count to BagProduct
+}

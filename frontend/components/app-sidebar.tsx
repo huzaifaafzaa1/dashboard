@@ -58,12 +58,27 @@ const data = {
       icon: Bot,
       items: [
         {
-          title: "Add Product", // ✅ Changed from 'name' to 'title'
-          url: "/dashboard/addproducts",
+          title: "Add Product", 
+          url: "/dashboard/products/addproducts",
         },
         {
-          title: "All Products", // ✅ Changed from 'name' to 'title'
-          url: "/dashboard/allproducts",
+          title: "All Products", 
+          url: "/dashboard/products/allproducts",
+        },
+      ],
+    },
+    {
+      title: "Categories",
+      url: "#",
+      icon: Map,
+      items: [
+        {
+          title: "Add Categories", 
+          url: "/dashboard/categories/add",
+        },
+        {
+          title: "All Categories", 
+          url:"/dashboard/categories/all" ,
         },
       ],
     },

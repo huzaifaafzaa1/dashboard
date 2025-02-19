@@ -38,7 +38,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, bagProducts, dispatc
       </div>
       <div className="productDetails w-[100%]">
         <h2 className="mx-2 font-normal text-lg truncate">{product.title}</h2>
-        <p className="mx-2 text-darkgrey">{product.category}</p>
+        <p className="mx-2 text-darkgrey">{product.category.name}</p>
       </div>
       <div className="flex mt-3 justify-between">
         <p className="px-4 font-normal text-lg">$ {product.price}</p>

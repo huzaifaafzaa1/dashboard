@@ -32,7 +32,7 @@ const BagItems = () => {
 
             <div className=' px-3 py-3'>
               <h2 className='text-2xl font-cabin  py-1'>{bagproduct.title}</h2>
-              <p className='py-1 text-darkgrey font-cabin'>{bagproduct.category}</p>
+              <p className='py-1 text-darkgrey font-cabin'>{bagproduct.category.name}</p>
               <p className='py-1 font-cabin text-lg'>{bagproduct.description}</p>
               <div className='py-2 flex gap-3'>
               <ul className='flex items-center gap-1 text-darkgreen text-lg'>

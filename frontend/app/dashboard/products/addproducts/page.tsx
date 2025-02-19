@@ -1,6 +1,7 @@
 "use client";
 import { useRouter, useSearchParams } from "next/navigation";
-import { useProduct } from "@/hooks/useProduct"; // Import the custom hook
+import { useProduct } from "@/hooks/useProduct";
+import { useCategories } from "@/hooks/useCategory";
 import { toast } from "sonner";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -17,59 +18,50 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { useEffect } from "react";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
-// Zod validation schema
-const formSchema = z.object({
-  id: z.string(),
-  title: z.string(),
-  price: z.number().min(0),
-  description: z.string(),
-  category: z.string(),
-  image: z.string().url({ message: "Please enter a valid URL." }),
-  rating: z.object({
-    rate: z.number().min(0).max(5),
-    count: z.number(),
-  }),
+// Define the Zod schema
+const RatingSchema = z.object({
+  rate: z.number(),
+  count: z.number(),
 });
-
-// Define the Product interface
-interface Product {
-  id: string;
-  title: string;
-  price: number;
-  description: string;
-  category: string;
-  image: string;
-  rating: {
-    rate: number;
-    count: number;
-  };
-}
+const formSchema = z.object({
+  title: z.string(),
+  price: z.number(),
+  description: z.string(),
+  category: z.object({
+    _id: z.string(),
+    name: z.string(),
+  }),
+  image: z.string(),
+  rating: RatingSchema,
+});
 
 export default function AddProductPage() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const id = searchParams.get("id");
+  const { categories, loading } = useCategories();
 
-  // Use the custom hook
-  const { useProductQuery, addProductMutation, updateProductMutation } =
-    useProduct();
-
-  // Determine the mode based on the presence of id is there is id in the url then mode is edit if there is no id the mode will be add
-  const mode = id ? "edit" : "add";
-
-  // Fetch product data if in "edit" mode using the custom hook
+  const { useProductQuery, addProductMutation, updateProductMutation } = useProduct();
   const { data: product, isLoading } = useProductQuery(id);
 
-  // Initialize the form
+  const mode = id ? "edit" : "add";
+  
+
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      id: "",
       title: "",
       price: 0,
       description: "",
-      category: "",
+      category: { _id: "", name: "" }, // Initialize as an object
       image: "",
       rating: {
         rate: 0,
@@ -78,15 +70,13 @@ export default function AddProductPage() {
     },
   });
 
-  // Reset the form with product data when it's fetched
   useEffect(() => {
     if (product && mode === "edit") {
       form.reset({
-        id: product.id,
         title: product.title,
         price: product.price,
         description: product.description,
-        category: product.category,
+        category: { _id: product.category._id, name: product.category.name }, // Ensure category is an object
         image: product.image,
         rating: {
           rate: product.rating.rate,
@@ -96,14 +86,21 @@ export default function AddProductPage() {
     }
   }, [product, mode, form]);
 
-  // Submit handler for both add and edit
   const onSubmit = (values: z.infer<typeof formSchema>) => {
-    const productData: Product = {
-      id: values.id,
+    const selectedCategory = categories.find(
+      (cat) => cat._id === values.category._id
+    );
+
+    if (!selectedCategory) {
+      toast.error("Invalid category selected.");
+      return;
+    }
+
+    const productData = {
       title: values.title,
       price: values.price,
       description: values.description,
-      category: values.category,
+      category: selectedCategory,
       image: values.image,
       rating: {
         rate: values.rating.rate,
@@ -113,9 +110,9 @@ export default function AddProductPage() {
 
     if (mode === "add") {
       addProductMutation.mutate(productData);
-    } else if (mode === "edit") {
+    } else if (mode === "edit" && product?._id) {
       updateProductMutation.mutate({
-        id: productData.id,
+        id: product._id,
         product: productData,
       });
     }
@@ -129,27 +126,7 @@ export default function AddProductPage() {
         onSubmit={form.handleSubmit(onSubmit)}
         className="space-y-8 max-w-3xl mx-auto py-10"
       >
-        {/* Product ID Field */}
-        <FormField
-          control={form.control}
-          name="id"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Id</FormLabel>
-              <FormControl>
-                <Input
-                  placeholder="Id"
-                  type="text"
-                  {...field}
-                  disabled={mode === "edit"}
-                />
-              </FormControl>
-              <FormDescription>This is your product ID.</FormDescription>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-
+        {/* Title Field */}
         <FormField
           control={form.control}
           name="title"
@@ -165,6 +142,7 @@ export default function AddProductPage() {
           )}
         />
 
+        {/* Price Field */}
         <FormField
           control={form.control}
           name="price"
@@ -186,6 +164,7 @@ export default function AddProductPage() {
           )}
         />
 
+        {/* Description Field */}
         <FormField
           control={form.control}
           name="description"
@@ -203,21 +182,49 @@ export default function AddProductPage() {
           )}
         />
 
-        <FormField
-          control={form.control}
-          name="category"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Category</FormLabel>
-              <FormControl>
-                <Input placeholder="Category" type="text" {...field} />
-              </FormControl>
-              <FormDescription>This is your product Category.</FormDescription>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
+        {/* Category Field */}
+        <Form {...form}>
+          <FormField
+            control={form.control}
+            name="category"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Category</FormLabel>
+                <Select
+                  onValueChange={(value) => {     //value will have the value that we select from form i.e-(electronics mens etc)
+                    const selectedCategory = categories.find(        //categories will have the value stored in categories as it storeda as object it will also have id of object means whole object (mens,womens,jewelry,electronics)
+                      (cat) => cat._id === value                     // compare the category id with the value id 
+                    );
+                    if (selectedCategory) {
+                      field.onChange(selectedCategory);             // this line will select the category object and update the form state
+                    }
+                  }}
+                  value={field.value?._id || ""}
+                >
+                  <FormControl>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select a category" />
+                    </SelectTrigger>
+                  </FormControl>
+                  <SelectContent>
+                    {categories.map((category) => (
+                      //"When a user selects a category from the dropdown, the selected category's _id is passed as the value. This helps us identify which category was chosen."
+                      <SelectItem key={category._id} value={category._id}>  
+                        {category.name}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+                <FormDescription>
+                  This is your product Category.
+                </FormDescription>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+        </Form>
 
+        {/* Image URL Field */}
         <FormField
           control={form.control}
           name="image"
@@ -237,6 +244,7 @@ export default function AddProductPage() {
           )}
         />
 
+        {/* Rating Fields */}
         <FormField
           control={form.control}
           name="rating.rate"
