@@ -3,14 +3,13 @@
 import React, { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import Link from "next/link";
-import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { setProducts } from "../app/redux/productsSlice";
 import { addToBag } from "../app/redux/bagSlice";
 import { selectBagProducts, selectProducts} from "../app/redux/selector";
 import ProductCard from "./ProductCard";
 import { MdOutlineCancelPresentation } from "react-icons/md";
-import { Product, BagProduct } from "../app/redux/type"; // Import BagProduct type from type.ts
+import { Product, BagProduct } from "../type/type"; // Import BagProduct type from type.ts
 import API from "@/lib/axiosInstance";
 
 const Products = () => {

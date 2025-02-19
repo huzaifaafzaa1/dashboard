@@ -1,11 +1,6 @@
 import API from '@/lib/axiosInstance';
+import { Category } from '@/type/type';
 
-// Define the Category interface to match your schema
-interface Category {
-  _id: string; // Make _id required
-  name: string;
-  products: string[];
-}
 
 // Fetch all categories
 export const fetchCategories = async (): Promise<Category[]> => {

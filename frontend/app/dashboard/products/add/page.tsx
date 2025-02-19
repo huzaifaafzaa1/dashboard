@@ -49,8 +49,8 @@ export default function AddProductPage() {
   const id = searchParams.get("id");
   const { categories, loading } = useCategories();
 
-  const { useProductQuery, addProductMutation, updateProductMutation } = useProduct();
-  const { data: product, isLoading } = useProductQuery(id);
+  const { getProductQuery, addProductMutation, updateProductMutation } = useProduct();
+  const { data: product, isLoading } = getProductQuery(id);
 
   const mode = id ? "edit" : "add";
   

@@ -1,23 +1,5 @@
 import API from '@/lib/axiosInstance';
-
-// Update the Product interface in your custom hook and service function
-interface Product {
-  _id?: string; // Make _id optional
-  title: string;
-  price: number;
-  description: string;
-  category: {
-    _id: string;
-    name: string;
-  }; // Change to an object with _id and name
-  image: string;
-  rating: Rating;
-}
-
-export interface Rating {
-  rate: number;
-  count: number;
-}
+import { Product } from '@/type/type';
 
 // Fetch all products
 export const fetchProducts = async (): Promise<Product[]> => {

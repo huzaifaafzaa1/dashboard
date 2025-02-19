@@ -28,7 +28,8 @@ export default function RootLayout({ children }: { children: ReactNode }) {
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
         <ClientProvider>
           <QueryProvider>
-            <ToastContainer
+            {/* This is custom toast and i am using it inside home*/} 
+            <ToastContainer               
               position="bottom-right"
               autoClose={3000}
               hideProgressBar={false}
@@ -39,7 +40,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
               draggable
               pauseOnHover
             />
-            <Toaster position="bottom-right" />
+            <Toaster position="bottom-right" /> {/* This is shadcn toast. I am using it inside dashboard */}     
             {children} {/* This ensures only relevant content is displayed */}
           </QueryProvider>
         </ClientProvider>

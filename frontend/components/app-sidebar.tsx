@@ -59,11 +59,11 @@ const data = {
       items: [
         {
           title: "Add Product", 
-          url: "/dashboard/products/addproducts",
+          url: "/dashboard/products/add",
         },
         {
           title: "All Products", 
-          url: "/dashboard/products/allproducts",
+          url: "/dashboard/products/all",
         },
       ],
     },

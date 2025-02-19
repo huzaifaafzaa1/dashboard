@@ -5,14 +5,14 @@ import Link from "next/link";
 import { IoBagHandleOutline } from "react-icons/io5";
 import { useSelector } from "react-redux";
 import { usePathname } from "next/navigation";
-import { ToastContainer, toast } from "react-toastify";
+import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import BagProduct from "./BagProduct"; // Import the new BagProduct component
 import { selectBagProducts } from "../app/redux/selector";
 
 
 const Bag: React.FC = () => {
-  const bagProducts = useSelector(selectBagProducts); // Assuming selectBagProducts is typed correctly
+  const bagProducts = useSelector(selectBagProducts); // using selector function
 
   const pathname = usePathname();
 

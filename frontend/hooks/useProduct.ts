@@ -2,25 +2,7 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { fetchProducts, addProduct, removeProduct, updateProduct, fetchProductById } from '@/services/productService';
 import { toast } from 'sonner'; // Import toast
-
-// Update the Product interface in your custom hook and service function
-interface Product {
-  _id?: string; // Make _id optional
-  title: string;
-  price: number;
-  description: string;
-  category: {
-    _id: string;
-    name: string;
-  }; // Change to an object with _id and name
-  image: string;
-  rating: Rating;
-}
-
-export interface Rating {
-  rate: number;
-  count: number;
-}
+import { Product } from '@/type/type';
 
 // Main custom hook combining all functionalities
 export const useProduct = () => {
@@ -33,7 +15,8 @@ export const useProduct = () => {
   });
 
   // Fetch a single product by ID using useQuery
-  const useProductQuery = (_id: string | null) => {
+  const getProductQuery = (_id: string | null) => {
+    console.log({_id}, "get product")
     return useQuery<Product>({
       queryKey: ['product', _id],
       queryFn: async () => {
@@ -83,7 +66,7 @@ export const useProduct = () => {
 
   return {
     productsQuery,
-    useProductQuery,
+    getProductQuery,
     addProductMutation,
     updateProductMutation,
     removeProductMutation,

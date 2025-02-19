@@ -7,12 +7,12 @@ import { FaPlus } from "react-icons/fa6";
 import { FaMinus } from "react-icons/fa";
 import { useSelector, useDispatch } from 'react-redux';
 import { increaseCount,decreaseCount } from '../../redux/bagSlice';
-import { RootState } from '../../redux/store'; // Import RootState
+import { selectBagProducts } from '@/app/redux/selector';
 
 const BagItems = () => {
  
   const dispatch = useDispatch();
-  const bagProducts = useSelector((state:RootState)=>state.bag.bagProducts)     // state is set i dont need to dispatch it here
+  const bagProducts = useSelector(selectBagProducts)     // state is set i dont need to dispatch it here
 
   return (
     <div className='w-[65%]  font-cabin '>

@@ -6,10 +6,11 @@ export interface Rating {
 export interface Category {
   _id: string;
   name: string;
+  products: string[]; // Add this if the API provides it
 }
 
 export interface Product {
-  _id: string;
+  _id?: string;
   title: string;
   price: number;
   description: string;

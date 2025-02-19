@@ -3,7 +3,7 @@
 import React from "react";
 import { useDispatch } from "react-redux";
 import { removeFromBag } from "../app/redux/bagSlice";
-import { Product } from "../app/redux/type";
+import { Product } from "../type/type";
 
 interface BagProductProps {
   product: Product;

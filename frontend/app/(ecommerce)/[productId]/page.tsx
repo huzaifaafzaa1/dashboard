@@ -7,53 +7,26 @@ import { MdStarHalf } from "react-icons/md";
 import { MdStar } from "react-icons/md";
 import { addToBag } from '../../redux/bagSlice';
 import { useSelector, useDispatch } from 'react-redux';
-import { toast, ToastContainer } from "react-toastify";
+import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useParams } from 'next/navigation';
-// import { selectProducts } from '@/app/redux/selector';
-
-// Define types for Product and Redux state
-type Category = {
-  _id: string;
-  name: string;
-};
-
-type Product = {
-  _id: string;
-  title: string;
-  category: Category; // Change this from string to Category
-  description: string;
-  image: string;
-  price: number;
-  rating: {
-    rate: number;
-    count: number;
-  };
-};
-
-type ReduxState = {
-  bag: {
-    bagProducts: Product[];
-  };
-  productsStore: {
-    products: Product[];
-  };
-};
+import { selectBagProducts } from '@/app/redux/selector';
+import { Product,Category, Rating, BagProduct } from '@/type/type'; // Import types from type.ts
 
 const ProductDescription = () => {
   const dispatch = useDispatch();
   
   // Access Redux state with types
-  const bagProducts = useSelector((state: ReduxState) => state.bag.bagProducts);
+  const bagProducts = useSelector(selectBagProducts);
   const { productId } = useParams();
-  console.log("i am product ID",productId)
+  console.log("i am product ID", productId);
 
-  const state = useSelector(_=>_)
+  const state = useSelector(_ => _);
 
-  useEffect(()=>console.log({state}))
+  useEffect(() => console.log({ state }), [state]);
 
   // Find the product from the store based on productId
-  const product = useSelector((state: ReduxState) => 
+  const product = useSelector((state: { productsStore: { products: Product[] } }) => 
     state.productsStore.products.find((item) => item._id === productId)
   );
 
@@ -64,18 +37,6 @@ const ProductDescription = () => {
 
   return (
     <div className='w-[65%] font-cabin '>
-      <ToastContainer
-        position="bottom-right"
-        autoClose={3000}
-        hideProgressBar={false}
-        newestOnTop={false}
-        closeOnClick
-        rtl={false}
-        pauseOnFocusLoss
-        draggable
-        pauseOnHover
-      />
-
       <div><Link href="/" className='flex gap-2 items-center my-5 py-2 px-3'>
         <IoIosArrowBack />Back</Link>
       </div>

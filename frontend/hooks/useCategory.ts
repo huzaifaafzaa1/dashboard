@@ -1,12 +1,8 @@
 "use client";
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'; 
 import { fetchCategories, addCategory } from '@/services/categoryService'; 
+import { Category } from '@/type/type';
 
-interface Category {
-  _id: string; // Make _id required
-  name: string;
-  products: string[];
-}
 
 export const useCategories = () => {
   const { data: categories = [], isLoading, isError, error } = useQuery<Category[], Error>({

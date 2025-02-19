@@ -1,7 +1,7 @@
 import React from "react";
 import { BsFillBagPlusFill } from "react-icons/bs";
 import { toast } from "react-toastify";
-import { BagProduct } from "../app/redux/type"; // Use BagProduct type here
+import { BagProduct } from "../type/type"; // Use BagProduct type here
 import { useDispatch } from "react-redux";
 import { addToBag } from "../app/redux/bagSlice";
 

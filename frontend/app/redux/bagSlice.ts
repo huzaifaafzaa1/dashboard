@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { BagProduct } from "./type"; // Import BagProduct instead of Product
+import { BagProduct } from "../../type/type"; // Import BagProduct instead of Product
 
 interface BagState {
   bagProducts: BagProduct[]; // Use BagProduct here

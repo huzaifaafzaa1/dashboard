@@ -41,7 +41,7 @@ const AllProducts = () => {
 
             {openMenuId === product._id && (
               <div className="absolute top-10 right-2 bg-white border rounded-lg shadow-lg w-32 z-10">
-                <Link href={`/dashboard/products/addproducts?id=${product._id}`}>
+                <Link href={`/dashboard/products/add?id=${product._id}`}>
                   <button className="w-full text-left px-4 py-2 hover:bg-gray-100">Edit</button>
                 </Link>
                 <button
